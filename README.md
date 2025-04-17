@@ -18,6 +18,8 @@ This package is tested on the MATLAB R2023b on Windows 11 64-bit.
 
 
 # 3. Usage
+* cd SanFranciscoWorld
+* Download our quarter-turn staircase dataset from [[link](https://drive.google.com/file/d/18A6IdBQ6TKxNHFnNv0MDyeXLSF-bX098/view?usp=sharing)](#) 
 * Run SFworld_core/main_script_STSC_ARkit.m, which will give you the SFW detection and the 3D motion estimation result. Enjoy! :)
 # 4. SFW Datasets
 |     Sequence      | Total Traveling Rotation |  Download  |
