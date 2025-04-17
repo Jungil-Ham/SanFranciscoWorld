@@ -1,0 +1,2 @@
+1156 depth_new/1156.png 1156 rgb_new/1156.png 1156 confidence_new/1156.png
+1157 depth_new/1157.png 1157 rgb_new/1157.png 1157 confidence_new/1157.png

@@ -4,8 +4,8 @@ clear variables; %clear classes;
 rand('state',0); % rand('state',sum(100*clock));
 dbstop if error;
 addpath(genpath(pwd))
-addpath('addon/lsd_1.6');
-addpath('addon/lsd_1.6/Matlab');
+addpath('./addon/lsd_1.6');
+addpath('./addon/lsd_1.6/Matlab');
 addpath('MatlabProgressBar');
 addpath('forDrawingFigures');
 
@@ -13,7 +13,7 @@ addpath('forDrawingFigures');
 
 % choose the experiment case
 % ICL NUIM dataset (1~8)
-expCase = 5; % stairScene
+expCase = 2; % stairScene
 colors = {'r', 'g', 'b', 'c', 'm', 'y'};
 % are figures drawn?
 % 1 : yes, draw figures to see current status
@@ -26,22 +26,21 @@ toVisualize = 1;
 toSave = 1;
 
 
-setupParams_TAMU;
+setupParams_ARkit;
 
 
 % load ICL NUIM dataset data
-rawICLNUIMdataset = rawTAMUdataset_load(datasetPath,M);
-%process_data(datasetPath);
+rawICLNUIMdataset = rawSTSCdataset_load(datasetPath,M);
+process_data(datasetPath);
 
 % camera calibration parameters
-[ICLNUIMdataset] = rawICLNUIMdataset; %getSyncTUMRGBDdataset(rawICLNUIMdataset, imInit, M);
-optsLPIC = load_param_LPIC_TAMU;
-cam = initialize_cam_TAMU(ICLNUIMdataset, optsLPIC.imagePyramidLevel);
-
+[ICLNUIMdataset] = getSyncTUMRGBDdataset(rawICLNUIMdataset, imInit, M);
+optsLPIC = load_param_LPIC;
+cam = initialize_cam_STSC(ICLNUIMdataset, optsLPIC.imagePyramidLevel);
 
 %% load ground truth data
 
-%{
+
 % ground truth trajectory in ICL NUIM dataset
 R_gc_true = zeros(3,3,M);
 p_gc_true = zeros(3,M);
@@ -53,8 +52,6 @@ for k = 1:M
     T_gc_true{k} = [ R_gc_true(:,:,k), p_gc_true(:,k);
         zeros(1,3),           1; ];
 end
-%}
-
 %{
 % if (toVisualize)
     figure; hold on; axis equal;
@@ -75,7 +72,6 @@ end
 end
 %}
 
-%{
 % generate ground truth trajectory in vector form
 stateTrue = zeros(6,M);
 stateTrue(1:3,:) = p_gc_true;
@@ -83,15 +79,15 @@ for k = 1:size(p_gc_true,2)
     [yaw, pitch, roll] = dcm2angle(R_gc_true(:,:,k));
     stateTrue(4:6,k) = [roll; pitch; yaw];
 end
-%}
+
 
 %% main LPIC part
 
-
+startAt = optsLPIC.startIdx;
 % 1. Manhattan frame tracking for LPIC
 systemInited_LPIC = false;
 
-R_gc1 = [1 0 0;0 1 0;0 0 1];
+R_gc1 = R_gc_true(:,:,startAt);
 R_gc_LPIC = zeros(3,3,M);
 R_gc_LPIC(:,:,1) = R_gc1;
 
@@ -119,40 +115,36 @@ pNV_LPIC = cell(1,M);
 
 
 % do LPIC
-for imgIdx = 1:M
-    
+for imgIdx = startAt:M
     %% 1. Manhattan frame tracking
+    if imgIdx == 303
+        fprintf("stop at 57");
+    end
+    if(imgIdx == 1081 || imgIdx == 2876) %L1 1
+    %if(imgIdx == 126 || imgIdx == 141 || imgIdx == 143 || imgIdx == 145 || imgIdx == 147 || imgIdx == 149 || imgIdx == 151 || imgIdx == 153 || imgIdx == 155  || imgIdx == 157  || imgIdx == 159 || imgIdx == 160 || imgIdx == 161 || imgIdx == 163  || imgIdx == 166 || imgIdx == 167 || imgIdx == 168 || imgIdx == 169 || imgIdx == 170 || imgIdx == 171 || imgIdx == 172 || imgIdx == 174 || imgIdx == 175 || imgIdx == 177 || imgIdx == 178 || imgIdx == 180 || imgIdx == 184 || imgIdx == 186 || imgIdx == 192 || imgIdx == 373 || imgIdx == 385 || imgIdx == 388)
+        continue;
+    end
     % image
-    imageCurForLine = getImgInSTSCdataset_VGA(datasetPath, ICLNUIMdataset, cam, imgIdx, 'gray');
-    imageCurForMW = getImgInSTSCdataset_VGA(datasetPath, ICLNUIMdataset, cam, imgIdx, 'rgb');
-    depthCurForMW = getImgInSTSCdataset_VGA(datasetPath, ICLNUIMdataset, cam, imgIdx, 'depth');
+    
+    imageCurForLine = getImgInSTSCdataset(datasetPath, ICLNUIMdataset, cam, imgIdx, 'gray');
+    imageCurForMW = getImgInSTSCdataset(datasetPath, ICLNUIMdataset, cam, imgIdx, 'rgb');
+    depthCurForMW = getImgInSTSCdataset(datasetPath, ICLNUIMdataset, cam, imgIdx, 'depth');
+    confiCurForMW = getImgInSTSCdataset(datasetPath, ICLNUIMdataset, cam, imgIdx, 'confi');
+    depthCurForMW(confiCurForMW == 0 ) = 0;
+    depthCurForMW(confiCurForMW == 1 ) = 0;
     lineLength = optsLPIC.lineLength;
     dimageCurForLine = double(imageCurForLine);
-    %[lines, ~] = lsdf(dimageCurForLine, (lineLength^2));
-    %load('Lines_TAMU_b.mat');
-    load('TAMUClst.mat');
-    vpCells ={vp1, vp2, vp3, vp4};
-    aa = 1;
-    allCircleNormalcell = cell(1, size(vpCells, 2));
-    figure(3);
-    imshow(imageCurForLine)
-    for k = 1:size(vpCells,2) %1~6
-        for i = 1:size(vpCells{k},(1))/2 %number of line in each vp
-        
-        ptEnd1 = [vpCells{k}(2*i-1,1:2)];
-        ptEnd2 = [vpCells{k}(2*i  ,1:2)];
-        line([ptEnd1(1) ptEnd2(1)], [ptEnd1(2) ptEnd2(2)], 'Color', ...
-            colors{k}, 'LineWidth',2)
-        lines(aa,:) = [ptEnd1 ptEnd2];
-        aa = aa+1;
-        end
-    end
-
+    [lines, ~] = lsdf(dimageCurForLine, (lineLength^2));
+    lines = extractUniqueLines(lines, cam);
+    [imageCurForMW, depthCurForMW] = getImgPyramid(imageCurForMW, depthCurForMW, optsLPIC.imagePyramidLevel);
+    
+    
     % for the first time in this loop
     if (~systemInited_LPIC)
         % initialize and seek the dominant MF
-        %[R_cM, vpInfo, pNV, sNV, sPP] = seekSanfranciscoWorld(imageCurForLine, imageCurForMW, depthCurForMW, cam, optsLPIC);
-        [R_cM, R_SLP, pNV] = seekSanFranciscoWorld_MNPL_VGA(imageCurForLine, imageCurForMW, depthCurForMW, lines, cam, optsLPIC);
+        [R_cM, R_SLP, pNV] = seekSanFranciscoWorld_MNPL(imageCurForLine, imageCurForMW, depthCurForMW, lines, cam, optsLPIC);
+        
+        %[R_cM, R_SLP, pNV] = seekSanFranciscoWorld(imageCurForLine, imageCurForMW, depthCurForMW, lines, cam, optsLPIC);
         
         R_c1M = R_cM(:,1:3);
         R_gM = R_gc1 * R_c1M;
@@ -167,10 +159,15 @@ for imgIdx = 1:M
         %[state] = predictVPs(state, optsLPIC);
         R_SLP_old = R_SLP;
         % track Manhattan frame
-        [R_cM, R_SLP, vpInfo, pNV, sNV, sPP, clusteredLinesIdx, maxVoteSumIdx] = trackSanFranciscoWorld_3(R_cM, pNV,R_SLP, imageCurForLine, imageCurForMW, depthCurForMW,lines, cam, optsLPIC,imgIdx);
+        if(optsLPIC.LShaped == 0)
+        [R_cM, R_SLP, vpInfo, pNV, sNV, sPP, clusteredLinesIdx, maxVoteSumIdx] = trackSanFranciscoWorld_2(R_cM, pNV,R_SLP, imageCurForLine, imageCurForMW, depthCurForMW,lines, cam, optsLPIC, imgIdx);
+        else
+        [R_cM, R_SLP, vpInfo, pNV, sNV, sPP, clusteredLinesIdx, maxVoteSumIdx] = trackSanFranciscoWorld_LShaped(R_cM, pNV,R_SLP, imageCurForLine, imageCurForMW, depthCurForMW,lines, cam, optsLPIC, imgIdx);
+        end
         vpInfo_LPIC{imgIdx} = vpInfo;
         pNV_LPIC{imgIdx} = pNV;
-       
+        
+        
     
         % correction step in KF
         %[state] = updateVPs(state, R_cM, optsLPIC);
@@ -178,6 +175,8 @@ for imgIdx = 1:M
         
         
         % update current camera pose
+        [U,~,V] = svd([R_cM(:,1), R_cM(:,2), R_cM(:,3)]);
+        R_cM = U * V';
         R_gc_current = R_gM * inv(R_cM);
         R_gc_LPIC(:,:,imgIdx) = R_gc_current;
     end
@@ -185,13 +184,12 @@ for imgIdx = 1:M
     
     %% 2. update 6 DoF camera pose and visualization
     fprintf('imgIdx: %d  \n', imgIdx);
-    if (imgIdx >= 46)
+    if (imgIdx >= startAt+1)
         % visualize current status
-        plots_status_tracking2;
+        plots_status_tracking;
     else
-    %   plot_save_1st_frame;
+       plot_save_1st_frame;
     end
-    
     
 end
 

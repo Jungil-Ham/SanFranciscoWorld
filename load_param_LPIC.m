@@ -64,22 +64,11 @@ optsLPIC.processNoise = deg2rad(0.2);
 optsLPIC.measurementNoise = deg2rad(0.2);
 
 
-optsLPIC.LShaped = 0;
 optsLPIC.LShaped = 1;
-optsLPIC.startIdx = 822; 
-%optsLPIC.startIdx = 167; %detection L2
-%optsLPIC.startIdx = 1127;
-%optsLPIC.startIdx = 2473; %L1 temp
-%optsLPIC.startIdx = 27; %cluster L1 1
-%optsLPIC.startIdx = 231; %cluster L1
+
 optsLPIC.startIdx = 1; %cluster L1 2
 
 %optsLPIC.startIdx = 1157; %cluster L2
-
-%optsLPIC.startIdx = 487; %cluster L2
-%optsLPIC.startIdx = 166; %cluster U 
-%optsLPIC.startIdx = 1157
-%optsLPIC.startIdx = 1; 
 end
 
 

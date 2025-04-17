@@ -8,7 +8,6 @@ lineLength = optsLPIC.lineLength;
 K = cam.K_pyramid(:,:,1);
 Kinv = inv(K);
 minNumSlpSample=2;
-VDDIdx = 3;
 %% initialize and seek dominant 1-plane
 
 % plane and surface normal vector
@@ -36,8 +35,6 @@ if (isTracked == 0)
     vpInfo = [];
     return;
 end
-
-%[R, clusteredLinesIdx,maxVoteSumIdx] = detectOrthogonalLineRANSAC_MNPL(planeNormalVector, lines, Kinv, cam, optsLPIC);
 [R, clusteredLinesIdx,maxVoteSumIdx] = detectOrthogonalLineRANSAC_ODEP(planeNormalVector, lines, Kinv, cam, optsLPIC);
 figure(2);
 imshow(imageCurForLine)
@@ -161,10 +158,7 @@ for k = 1:numUnLines
    'Color' ,colors{k},'LineWidth', 4); hold on;
 end
 
-PHD = 2; %L1 1 %R_Ncheck % SD3
-PHD = 1; %L1 2 short L2 1156
 PHD = 2;
-
 
 %--------------------------------------------MaxStabbing------------------------------------------------------------%
 

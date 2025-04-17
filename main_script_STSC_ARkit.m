@@ -13,7 +13,7 @@ addpath('forDrawingFigures');
 
 % choose the experiment case
 % ICL NUIM dataset (1~8)
-expCase = 8; % stairScene
+expCase = 1; % stairScene
 colors = {'r', 'g', 'b', 'c', 'm', 'y'};
 % are figures drawn?
 % 1 : yes, draw figures to see current status
@@ -52,25 +52,6 @@ for k = 1:M
     T_gc_true{k} = [ R_gc_true(:,:,k), p_gc_true(:,k);
         zeros(1,3),           1; ];
 end
-%{
-% if (toVisualize)
-    figure; hold on; axis equal;
-    L = 0.1; % coordinate axis length
-    A = [0 0 0 1; L 0 0 1; 0 0 0 1; 0 L 0 1; 0 0 0 1; 0 0 L 1]';
-    
-    for k = 1:10:M
-        T = T_gc_true{k};
-        B = T * A;
-        plot3(B(1,1:2),B(2,1:2),B(3,1:2),'-r','LineWidth',1); % x: red
-        plot3(B(1,3:4),B(2,3:4),B(3,3:4),'-g','LineWidth',1); % y: green
-        plot3(B(1,5:6),B(2,5:6),B(3,5:6),'-b','LineWidth',1); % z: blue
-    end
-    plot3(p_gc_true(1,:),p_gc_true(2,:),p_gc_true(3,:),'k','LineWidth',2);
-    
-    title('ground truth trajectory of cam0 frame')
-    xlabel('x'); ylabel('y'); zlabel('z');
-end
-%}
 
 % generate ground truth trajectory in vector form
 stateTrue = zeros(6,M);
@@ -117,13 +98,6 @@ pNV_LPIC = cell(1,M);
 % do LPIC
 for imgIdx = startAt:M
     %% 1. Manhattan frame tracking
-    if imgIdx == 303
-        fprintf("stop at 57");
-    end
-    if(imgIdx == 1081 || imgIdx == 2876) %L1 1
-    %if(imgIdx == 126 || imgIdx == 141 || imgIdx == 143 || imgIdx == 145 || imgIdx == 147 || imgIdx == 149 || imgIdx == 151 || imgIdx == 153 || imgIdx == 155  || imgIdx == 157  || imgIdx == 159 || imgIdx == 160 || imgIdx == 161 || imgIdx == 163  || imgIdx == 166 || imgIdx == 167 || imgIdx == 168 || imgIdx == 169 || imgIdx == 170 || imgIdx == 171 || imgIdx == 172 || imgIdx == 174 || imgIdx == 175 || imgIdx == 177 || imgIdx == 178 || imgIdx == 180 || imgIdx == 184 || imgIdx == 186 || imgIdx == 192 || imgIdx == 373 || imgIdx == 385 || imgIdx == 388)
-        continue;
-    end
     % image
     
     imageCurForLine = getImgInSTSCdataset(datasetPath, ICLNUIMdataset, cam, imgIdx, 'gray');
@@ -135,56 +109,6 @@ for imgIdx = startAt:M
     lineLength = optsLPIC.lineLength;
     dimageCurForLine = double(imageCurForLine);
     [lines, ~] = lsdf(dimageCurForLine, (lineLength^2));
-    
-    if(imgIdx == 27)
-    newRow = [6.18261376896066 1349.60501750292 727.871353558927 1245.53821470245 0 0 0]; %L1 2
-    lines(end+1, :) = newRow;
-    end
-    if(imgIdx == 144)
-    newRow = [823.810676779463	1361.10997666278 1154.62164527421	702.209159859977 0 0 0;
-                1439.37981330222	522.226954492415  1899.77654609102	530.628354725787 0 0 0]; %L1 2
-    lines(end+1:end+2, :) = newRow;
-    end
-    if(imgIdx == 146)
-    newRow = [830.728996499417	1341.83109684948 1147.01108518086	713.778879813302 0 0 0;
-1402.92561260210	522.476954492415 1913.88710618436	532.238914819136 0 0 0]; %L1 2
-    lines(end+1:end+2, :) = newRow;
-    end
-    if(imgIdx == 148)
-    newRow = [831.269836639440	1352.69165694282 1165.38360560093	686.824679113185 0 0 0;
-1180.61668611435	663.370478413069 1343.60385064177	612.962077012835 0 0 0]; %L1 2
-    lines(end+1:end+2, :) = newRow;
-    end
-    if(imgIdx == 150)
-    newRow = [831.269836639440	1352.69165694282 1165.38360560093	686.824679113185 0 0 0;
-1180.61668611435	663.370478413069 1343.60385064177	612.962077012835 0 0 0]; %L1 2
-    lines(end+1:end+2, :) = newRow;
-    end
-    if(imgIdx == 152)
-    newRow = [885.759918319720	1340.12689614936 1160.91248541424	759.588681446908 0 0 0]; %L1 2
-    lines(end+1, :) = newRow;
-    end
-    if(imgIdx == 154)
-    newRow = [1149.02304550758	816.321761960327  884.411318553092	1387.56417736289 0 0 0]; %L1 2
-    lines(end+1, :) = newRow;
-    end
-    if(imgIdx == 156)
-    newRow = [876.452158693115	1431.20361726955  1143.22024504084	842.590723453909 0 0 0]; %L1 2
-    lines(end+1, :) = newRow;
-    end
-    if(imgIdx == 160)
-    newRow = [876.038798133022	1376.23249708285  1120.97520420070	823.311843640607 0 0 0]; %L1 2
-    lines(end+1, :) = newRow;
-    end
-    if(imgIdx == 167)
-    newRow = [814.967036172696	1434.82817969662  1050.38652275379	878.352683780630 0 0 0]; %L1 2
-    lines(end+1, :) = newRow;
-    end
-    if(imgIdx == 169)
-    newRow = [811.676196032672	1425.21761960327  1028.74008168028	906.203325554259 0 0 0]; %L1 2
-    lines(end+1, :) = newRow;
-    end
-    
     lines = extractUniqueLines(lines, cam);
     [imageCurForMW, depthCurForMW] = getImgPyramid(imageCurForMW, depthCurForMW, optsLPIC.imagePyramidLevel);
     
@@ -192,10 +116,12 @@ for imgIdx = startAt:M
     % for the first time in this loop
     if (~systemInited_LPIC)
         % initialize and seek the dominant MF
-        [R_cM, R_SLP, pNV] = seekSanFranciscoWorld_MNPL(imageCurForLine, imageCurForMW, depthCurForMW, lines, cam, optsLPIC);
-        
-        %[R_cM, R_SLP, pNV] = seekSanFranciscoWorld(imageCurForLine, imageCurForMW, depthCurForMW, lines, cam, optsLPIC);
-        
+        if (expCase == 2)
+        [R_cM, R_SLP, pNV] = seekSanFranciscoWorld_Detection(imageCurForLine, imageCurForMW, depthCurForMW, lines, cam, optsLPIC);
+        else
+        [R_cM, R_SLP, pNV] = seekSanFranciscoWorld_Rotation(imageCurForLine, imageCurForMW, depthCurForMW, lines, cam, optsLPIC);
+        end
+
         R_c1M = R_cM(:,1:3);
         R_gM = R_gc1 * R_c1M;
         systemInited_LPIC = true;
@@ -207,7 +133,9 @@ for imgIdx = startAt:M
         
         % propagation step in KF
         %[state] = predictVPs(state, optsLPIC);
+
         R_SLP_old = R_SLP;
+        
         % track Manhattan frame
         if(optsLPIC.LShaped == 0)
         [R_cM, R_SLP, vpInfo, pNV, sNV, sPP, clusteredLinesIdx, maxVoteSumIdx] = trackSanFranciscoWorld_2(R_cM, pNV,R_SLP, imageCurForLine, imageCurForMW, depthCurForMW,lines, cam, optsLPIC, imgIdx);
