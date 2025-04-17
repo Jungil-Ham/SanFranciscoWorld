@@ -35,13 +35,13 @@ This package is tested on the MATLAB R2023b on Windows 11 64-bit.
 # 5. Publications
 The approach is described and used in the following publications:
 
-* **San Francisco World: Leveraging Structural Regularities for 3-DoF Visual Compass** (Jungil Ham, Minji Kim, Suyoung Kang, Kyungdon Joo, Haoang Li, and Pyojin Kim), RA-L 2024.
+* **San Francisco World: Leveraging Structural Regularities of Slope for 3-DoF Visual Compass** (Jungil Ham, Minji Kim, Suyoung Kang, Kyungdon Joo, Haoang Li, and Pyojin Kim), RA-L 2024.
 
 # 6. License
 The package is licensed under the MIT License, see http://opensource.org/licenses/MIT.
 
       author = {Jungil Ham, Minji Kim, Suyoung Kang, Kyungdon Joo, Haoang Li, and Pyojin Kim},
-      title = {San Francisco World: Leveraging Structural Regularities for 3-DoF Visual Compass},
+      title = {San Francisco World: Leveraging Structural Regularities of Slope for 3-DoF Visual Compass},
       year = {2024},
       booktitle = {IEEE Robotics and Automation Letters (RA-L)},
      }
