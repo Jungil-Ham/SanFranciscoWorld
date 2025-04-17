@@ -9,7 +9,7 @@ switch( expCase )
     
 
     case 1
-        datasetPath = './quarter-turn-staircase';
+        datasetPath = 'D:/quarter-turn-staircase';
             
         imInit      = 1;    % first image index, (1-based index)
         M           = 570;  % number of images
@@ -17,7 +17,7 @@ switch( expCase )
         datasetPath = './SFDetection';
             
         imInit      = 1;    % first image index, (1-based index)
-        M           = 2;  % number of images
+        M           = 1;  % number of images
         
 
         

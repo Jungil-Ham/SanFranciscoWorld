@@ -66,9 +66,7 @@ optsLPIC.measurementNoise = deg2rad(0.2);
 
 optsLPIC.LShaped = 1;
 
-optsLPIC.startIdx = 1; %cluster L1 2
-
-%optsLPIC.startIdx = 1157; %cluster L2
+optsLPIC.startIdx = 1;
 end
 
 
