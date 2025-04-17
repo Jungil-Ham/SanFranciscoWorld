@@ -1,5 +1,5 @@
-# San Francisco World: Leveraging Structural Regularities for 3-DoF Visual Compass
-This package provides a MATLAB implementation of the RA-L 2024 paper: "San Francisco World: Leveraging Structural Regularities for 3-DoF Visual Compass" for the purpose of research and study only.
+# San Francisco World: Leveraging Structural Regularities of Slope for 3-DoF Visual Compass
+This package provides a MATLAB implementation of the RA-L 2024 paper: "San Francisco World: Leveraging Structural Regularities of Slope for 3-DoF Visual Compass" for the purpose of research and study only.
 
 ![SF-World](https://github.com/jungilha/SF-World-master/blob/main/pipeline.png)
 
