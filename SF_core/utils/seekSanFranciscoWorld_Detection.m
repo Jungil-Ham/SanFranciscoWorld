@@ -1,4 +1,4 @@
-function [R_final, R_SLP, pNV] = seekSanFranciscoWorld_MNPL(imageCurForLine, imageCur, depthCur,lines, cam, optsLPIC)
+function [R_final, R_SLP, pNV] = seekSanFranciscoWorld_Detection(imageCurForLine, imageCur, depthCur,lines, cam, optsLPIC)
 colors = {'r', 'g', 'b', 'c', 'm', 'k', 'y', [0, 0.4470, 0.7410], [0.5, 0, 0.5], [0, 0.5, 0.5], [0.5, 0.5, 0], [1, 0.75, 0.8], [0.6, 0.4, 0.2], [0.75, 0.75, 0.75], [1, 1, 0.5], [0.5, 0.5, 1], [0.587, 0.766, 0.628], [0.838, 0.698, 0.875], [0.360, 0.022, 0.132], [0.463, 0.069, 0.436], [0.416, 0.989, 0.289], [0.950, 0.965, 0.931], [0.875, 0.731, 0.508], [0.563, 0.028, 0.279], [0.563, 0.787, 0.181], [0.959, 0.210, 0.841], [0.612, 0.568, 0.395], [0.028, 0.775, 0.751], [0.324, 0.581, 0.114], [0.777, 0.219, 0.308]};
 isLShaped = optsLPIC.LShaped;
 % assign current parameters

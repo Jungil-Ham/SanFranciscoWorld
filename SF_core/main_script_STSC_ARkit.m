@@ -3,12 +3,14 @@ close all;
 clear variables; %clear classes;
 rand('state',0); % rand('state',sum(100*clock));
 dbstop if error;
-addpath(genpath(pwd))
-addpath('./addon/lsd_1.6');
-addpath('./addon/lsd_1.6/Matlab');
-addpath('MatlabProgressBar');
-addpath('forDrawingFigures');
+addpath(genpath('../'))
 
+addpath('../addon/lsd_1.6');
+addpath('../addon/lsd_1.6/Matlab');
+addpath('../MatlabProgressBar');
+addpath('../forDrawingFigures');
+addpath('../forDrawingFigures');
+addpath('./utils');
 %% basic setup for LPIC
 
 % choose the experiment case

@@ -3,11 +3,12 @@ close all;
 clear variables; %clear classes;
 rand('state',0); % rand('state',sum(100*clock));
 dbstop if error;
-addpath(genpath(pwd))
-addpath('./addon/lsd_1.6');
-addpath('./addon/lsd_1.6/Matlab');
-addpath('MatlabProgressBar');
-addpath('forDrawingFigures');
+addpath(genpath('../'))
+addpath('./utils');
+addpath('./../addon/lsd_1.6');
+addpath('./../addon/lsd_1.6/Matlab');
+addpath('./../MatlabProgressBar');
+addpath('./../forDrawingFigures');
 
 %% basic setup for LPIC
 
@@ -142,7 +143,7 @@ for imgIdx = startAt:M
     % for the first time in this loop
     if (~systemInited_LPIC)
         % initialize and seek the dominant MF
-        [R_cM, R_SLP, pNV] = seekSanFranciscoWorld_MNPL(imageCurForLine, imageCurForMW, depthCurForMW, lines, cam, optsLPIC);
+        [R_cM, R_SLP, pNV] = seekSanFranciscoWorld_Detection(imageCurForLine, imageCurForMW, depthCurForMW, lines, cam, optsLPIC);
         
         %[R_cM, R_SLP, pNV] = seekSanFranciscoWorld(imageCurForLine, imageCurForMW, depthCurForMW, lines, cam, optsLPIC);
         
